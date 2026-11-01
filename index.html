@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Escapada de desembre 2026: on dormim del 4 al 8 de desembre?</title>
+  <meta name="description" content="Comparador de les 8 cases candidates per a l'escapada del 4 al 8 de desembre de 2026 als Pirineus Orientals, amb preus per a 6 i 7 persones.">
+  <meta name="theme-color" content="#EAF5DF">
+
+  <!-- Vista prèvia en compartir (Open Graph / Twitter) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ca_ES">
+  <meta property="og:title" content="Escapada de desembre 2026">
+  <meta property="og:description" content="On dormim del 4 al 8 de desembre? Les 8 cases candidates, amb preus per a 6 i 7 persones.">
+  <meta property="og:url" content="https://ltrebol.github.io/viatge-pont-desembre/">
+  <meta property="og:image" content="https://ltrebol.github.io/viatge-pont-desembre/img/compartir.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Escapada de desembre, del 4 al 8 de desembre de 2026">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://ltrebol.github.io/viatge-pont-desembre/img/compartir.png">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23C9F296'/%3E%3Cpath d='M16 6 4 26h24z' fill='none' stroke='%231C2618' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/estils.css">
+</head>
+<body>
+  <a class="salt" href="#resum">Salta al contingut</a>
+
+  <!-- Navegació -->
+  <div class="nav-embolcall">
+    <div class="contenidor">
+      <nav class="nav" aria-label="Seccions">
+        <a class="logo" href="#inici">
+          <span class="logo__icona" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 3 2 17h16z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.2 8 10 10l2.8-2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          <span>Escapada de desembre</span>
+        </a>
+        <ul class="nav__enllacos">
+          <li><a href="#resum">Resum</a></li>
+          <li><a href="#cases">Cases</a></li>
+          <li><a href="#comparador">Comparar</a></li>
+          <li><a href="#mapa">Mapa</a></li>
+          <li><a href="#activitats">Activitats</a></li>
+          <li><a href="#preguntes">Què falta preguntar</a></li>
+          <li id="nav-meteo" hidden><a href="#meteo">El temps</a></li>
+        </ul>
+        <details class="nav__mobil">
+          <summary>Seccions</summary>
+          <ul>
+            <li><a href="#resum">Resum</a></li>
+            <li><a href="#cases">Cases</a></li>
+            <li><a href="#comparador">Comparar</a></li>
+            <li><a href="#mapa">Mapa</a></li>
+            <li><a href="#activitats">Activitats</a></li>
+            <li><a href="#preguntes">Què falta preguntar</a></li>
+          </ul>
+        </details>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Capçalera -->
+  <header class="hero" id="inici">
+    <div class="contenidor hero__graella">
+      <div class="hero__text">
+        <h1 id="titol-viatge">On dormim del 4 al 8 de desembre?</h1>
+        <p class="hero__intro">Vuit cases als Pirineus Orientals per a 4 nits. Encara no sabem si serem 6 o 7, així que cada preu surt calculat per als dos casos.</p>
+        <a class="boto" href="#resum">Veure el resum de les 8 cases</a>
+        <p class="hero__nota" id="hero-nota">Falta confirmar si som 6 o 7. Preus consultats l'1 de novembre de 2026.</p>
+      </div>
+      <div class="peces" id="peces" aria-label="Les cases més econòmiques per persona"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- RESUM -->
+    <section class="seccio" id="resum" aria-labelledby="titol-resum">
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-resum">Resum de les 8 cases</h2>
+            <p>Toca una capçalera per ordenar i el nom d'una casa per veure'n la fitxa.</p>
+          </div>
+        </div>
+        <div class="full" tabindex="0" role="region" aria-labelledby="titol-resum">
+          <table class="full__taula" id="taula-resum"></table>
+        </div>
+        <div class="full__llegenda">
+          <span><i class="mostra-millor" aria-hidden="true"></i>Millor valor de la columna</span>
+          <span>Les notes d'Airbnb (de 5) es multipliquen per 2 per comparar-les amb Booking (de 10). Les notes amb menys de 10 ressenyes no opten a «Millor».</span>
+          <span>Temps des de Barcelona: sense trànsit ni neu.</span>
+          <span>* Dormitoris per confirmar.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASES -->
+    <section class="seccio" id="cases" aria-labelledby="titol-cases">
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-cases">Les cases</h2>
+            <p id="cases-subtitol">Ordenades pel preu per persona amb 6.</p>
+          </div>
+          <div class="segment" role="group" aria-label="Ordena les cases per" id="ordre-cases">
+            <button type="button" data-ordre="p6" aria-pressed="true">Preu amb 6</button>
+            <button type="button" data-ordre="p7" aria-pressed="false">Preu amb 7</button>
+            <button type="button" data-ordre="valoracio" aria-pressed="false">Valoració</button>
+            <button type="button" data-ordre="places" aria-pressed="false">Places</button>
+            <button type="button" data-ordre="bcn" aria-pressed="false">Des de BCN</button>
+          </div>
+        </div>
+
+        <details class="filtres" id="filtres">
+          <summary><span class="caixa-mes" aria-hidden="true"></span>Filtres <span class="filtres__actius" id="filtres-actius"></span></summary>
+          <form class="filtres__cos" id="form-filtres">
+            <div class="filtres__graella">
+              <label>Zona
+                <select name="zona" id="f-zona"><option value="">Totes les zones</option></select>
+              </label>
+              <label>Places (mínim)
+                <select name="places"><option value="0">Qualsevol</option><option value="7">7 o més</option><option value="8">8</option></select>
+              </label>
+              <label>Dormitoris (mínim)
+                <select name="dormitoris"><option value="0">Qualsevol</option><option value="3">3 o més</option><option value="4">4</option></select>
+              </label>
+              <label>Banys (mínim)
+                <select name="banys"><option value="0">Qualsevol</option><option value="1.5">1,5 o més</option><option value="2">2</option></select>
+              </label>
+              <label>Preu màxim per persona amb 6: <output id="f-preu-valor"></output>
+                <input type="range" name="preu" id="f-preu" step="5">
+              </label>
+            </div>
+            <fieldset class="filtres__opcions">
+              <legend>Equipament confirmat</legend>
+              <label><input type="checkbox" name="c" value="jardi"> Jardí</label>
+              <label><input type="checkbox" name="c" value="barbacoa"> Barbacoa</label>
+              <label><input type="checkbox" name="c" value="llar"> Estufa o llar que funciona</label>
+              <label><input type="checkbox" name="c" value="wifi"> Wi-Fi</label>
+              <label><input type="checkbox" name="c" value="mascotes"> Admet mascotes</label>
+              <label><input type="checkbox" name="c" value="aparcament"> Aparcament</label>
+              <label><input type="checkbox" name="c" value="roba"> Roba de llit inclosa</label>
+            </fieldset>
+            <fieldset class="filtres__opcions">
+              <legend>Condicions</legend>
+              <label><input type="checkbox" name="apta7"> Només cases aptes per a 7 persones</label>
+              <label><input type="checkbox" name="dates"> Només cases compatibles amb 4 nits</label>
+            </fieldset>
+            <button type="reset" class="boto boto--text">Esborrar els filtres</button>
+          </form>
+        </details>
+
+        <div class="graella-cases" id="llista-cases"></div>
+        <p class="buit" id="buit-cases" hidden>Cap casa coincideix amb aquests filtres. Prova d'esborrar-ne algun.</p>
+
+        <details class="descartades" id="descartades" hidden>
+          <summary><span class="caixa-mes" aria-hidden="true"></span><span id="descartades-titol">Cases descartades</span></summary>
+          <p class="descartades__nota">Només ho veus tu, en aquest navegador.</p>
+          <ul id="llista-descartades"></ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- COMPARADOR -->
+    <section class="seccio" id="comparador" aria-labelledby="titol-comparador">
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-comparador">Comparar cases</h2>
+            <p>Les barres mostren la diferència a cada fila. Una dada per confirmar no guanya ni perd.</p>
+          </div>
+          <div class="segment segment--etiquetes" id="comparador-triades" aria-live="polite"></div>
+        </div>
+        <div id="comparador-cos"></div>
+      </div>
+    </section>
+
+    <!-- MAPA -->
+    <section class="seccio" id="mapa" aria-labelledby="titol-mapa">
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-mapa">On són les cases</h2>
+            <p>Els cercles marquen una zona aproximada; només la casa 8 té l'adreça exacta.</p>
+          </div>
+          <div class="mapa__controls">
+            <label class="interruptor"><input type="checkbox" id="m-activitats" checked> Mostrar les activitats</label>
+          </div>
+        </div>
+        <div class="mapa__graella">
+          <div class="mapa__embolcall">
+            <div id="mapa-leaflet" class="mapa__mapa" role="region" aria-label="Mapa de les cases i les activitats"></div>
+            <button type="button" class="mapa__activar" id="mapa-activar" hidden>Toca per moure el mapa</button>
+          </div>
+          <ul class="mapa__llista" id="mapa-llista" aria-label="Cases al mapa"></ul>
+        </div>
+        <div class="mapa__llegenda" id="mapa-llegenda"></div>
+      </div>
+    </section>
+
+    <!-- ACTIVITATS -->
+    <section class="seccio" id="activitats" aria-labelledby="titol-activitats">
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-activitats">Què podem fer</h2>
+            <p>Idees per zona, no confirmacions d'obertura: comproveu horaris, neu i accessos abans d'anar-hi.</p>
+          </div>
+        </div>
+        <div class="segment segment--desplacable" role="tablist" aria-label="Tipus d'activitat" id="pestanyes"></div>
+        <p class="avis-muntanya" id="avis-muntanya" hidden><strong>Atenció:</strong> una ruta d'estiu no sempre és adequada a l'hivern. La neu, el gel, el vent i la visibilitat poden canviar-ne la viabilitat. Si no teniu informació contrastada, trieu passejades senzilles i de baixa cota.</p>
+        <div id="llista-activitats" role="tabpanel"></div>
+        <details class="fonts">
+          <summary><span class="caixa-mes" aria-hidden="true"></span>Fonts turístiques</summary>
+          <ul id="llista-fonts"></ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- QUÈ FALTA PREGUNTAR -->
+    <section class="seccio" id="preguntes" aria-labelledby="titol-preguntes">
+      <div class="contenidor">
+        <details class="desplegable" id="preguntes-desplegable">
+          <summary>
+            <span class="caixa-mes" aria-hidden="true"></span>
+            <h2 id="titol-preguntes">Què falta preguntar</h2>
+            <span class="desplegable__compte" id="preguntes-compte"></span>
+          </summary>
+          <p class="desplegable__intro">Dades encara per confirmar. Copia les preguntes d'una casa i envia-les a l'amfitrió.</p>
+          <div class="preguntes" id="llista-preguntes"></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- EL TEMPS: desactivat fins a finals de novembre (config.meteoActiva = false). -->
+    <section class="seccio" id="meteo" aria-labelledby="titol-meteo" hidden>
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-meteo">El temps del 4 al 8 de desembre</h2>
+            <p id="meteo-font">Previsió per zona d'Open-Meteo.</p>
+          </div>
+        </div>
+        <div class="meteo" id="meteo-zones"></div>
+      </div>
+    </section>
+
+    <!-- VOTACIÓ: desactivada (config.votacioActiva = false). -->
+    <section class="seccio" id="votacio" aria-labelledby="titol-votacio" hidden>
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h2 id="titol-votacio">Votació</h2>
+            <p>Cada participant pot votar una casa i canviar el vot fins que es tanqui la votació.</p>
+          </div>
+        </div>
+        <div class="votacio">
+          <div><h3>Cases</h3><ul id="votacio-cases"></ul></div>
+          <div>
+            <h3>El meu vot</h3>
+            <label>Qui ets? <select id="votacio-participant"><option value="">Tria el teu nom</option></select></label>
+            <p id="votacio-meu-vot">Encara no has votat.</p>
+          </div>
+          <div><h3>Resultats del grup</h3><ul id="votacio-resultats"></ul><p id="votacio-estat">La votació és oberta.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="barra-comparar" id="barra-comparar" hidden>
+    <p id="barra-comparar-text"></p>
+    <a class="boto boto--ple" href="#comparador">Veure la comparació</a>
+  </div>
+
+  <dialog class="fitxa" id="fitxa" aria-labelledby="fitxa-titol">
+    <div class="fitxa__cap">
+      <h2 id="fitxa-titol"></h2>
+      <button type="button" class="boto" id="fitxa-tancar">Tancar</button>
+    </div>
+    <div class="fitxa__scroll" id="fitxa-cos"></div>
+  </dialog>
+
+  <footer class="peu">
+    <div class="contenidor">
+      <p>Última actualització: <span id="ultima-actualitzacio"></span>. Preus facilitats pel grup per a l'estada del 4 al 8 de desembre de 2026 (4 nits). La disponibilitat no està comprovada: confirmeu-la a cada plataforma abans de reservar.</p>
+      <p>Temps en cotxe des de la plaça de Catalunya calculats amb OSRM (dades d'OpenStreetMap), sense trànsit ni neu. Mapa: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Fotos: anuncis d'Airbnb.</p>
+    </div>
+  </footer>
+
+  <p class="avis-copiat" id="avis-copiat" role="status" aria-live="polite"></p>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/dades.js"></script>
+  <script src="js/votacio.js"></script>
+  <script src="js/meteo.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

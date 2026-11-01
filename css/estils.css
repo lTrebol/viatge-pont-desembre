@@ -258,6 +258,36 @@ details[open] > summary .caixa-mes::before { content: "–"; }
 .full__taula td.text { white-space: normal; min-width: 240px; font-size: var(--text-mini); color: var(--color-tinta-2); line-height: 1.3; padding-block: var(--space-2); }
 .full__taula td .boto--text { min-height: 36px; font-size: var(--text-mini); padding: 0; }
 .full__llegenda { display: flex; flex-wrap: wrap; gap: var(--space-2) 18px; margin-top: var(--space-3); font-size: var(--text-mini); color: var(--color-tinta-2); }
+.full__grups { display: none; margin-bottom: var(--space-3); }
+.full__taula .nomes-mobil { display: none; }
+.full__linia { display: block; }
+@media (max-width: 600px) {
+  /* Al mòbil: columna «Casa» fixa + només el grup de columnes triat, sense desplaçament horitzontal */
+  .full__grups { display: flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; }
+  .full__grups button { white-space: nowrap; padding: 0 var(--space-3); }
+  .full { max-height: none; }
+  .full__taula { font-size: var(--text-mini); min-width: 0; }
+  .full__taula .nomes-escriptori, .full__taula tr.grups { display: none; }
+  .full__taula .nomes-mobil { display: table-cell; }
+  .full__taula span.nomes-mobil { display: inline; }
+  .full__taula:not([data-mobil="preu"]) .m-preu,
+  .full__taula:not([data-mobil="total"]) .m-total,
+  .full__taula:not([data-mobil="espai"]) .m-espai,
+  .full__taula:not([data-mobil="valoracio"]) .m-valoracio,
+  .full__taula:not([data-mobil="equip"]) .m-equip,
+  .full__taula:not([data-mobil="atencio"]) .m-atencio { display: none; }
+  .full__taula thead tr:nth-child(2) th { top: 0; }
+  .full__taula th, .full__taula td { padding: 0 var(--space-2); white-space: normal; }
+  .full__taula thead th button { min-height: 44px; line-height: 1.2; }
+  .full__taula tbody th, .full__taula thead tr:nth-child(2) th:first-child {
+    min-width: 0; width: 132px; max-width: 132px;
+  }
+  .full__taula tbody th { line-height: 1.2; padding-block: 6px; font-size: var(--text-mini); }
+  .full__casa { gap: 6px; align-items: flex-start; }
+  .full__casa .disc { width: 20px; height: 20px; font-size: var(--text-micro); }
+  .full__taula td.text { min-width: 0; padding-block: 6px; }
+  .full__taula td.millor::after { display: block; margin-left: 0; }
+}
 .mostra-millor { display: inline-block; width: 14px; height: 14px; border-radius: 2px; background: var(--color-lila); vertical-align: -2px; margin-right: 6px; }
 
 /* ---------- Filtres ---------- */

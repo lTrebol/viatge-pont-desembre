@@ -54,6 +54,7 @@
   const estat = {
     ordreCases: "p6",
     resum: { col: "p6", dir: "asc" },
+    resumMobil: "preu",
     comparar: [],
     descartades: new Set(),
     catActivitat: "totes",
@@ -154,26 +155,39 @@
 
   /* ---------- Resum (full de càlcul) ---------- */
   const SI_NO = (v) => (v === true ? 2 : v === null ? 1 : 0);
+  const ETIQ_EQ = { wifi: "Wi-Fi", jardi: "Jardí", barbacoa: "Barbacoa", llar: "Estufa", roba: "Roba de llit", mascotes: "Mascotes", aparcament: "Aparcament" };
+  function resumEquipament(c) {
+    const k = c.caracteristiques;
+    const si = Object.keys(ETIQ_EQ).filter((x) => k[x] === true).map((x) => ETIQ_EQ[x]);
+    const no = Object.keys(ETIQ_EQ).filter((x) => k[x] === false).map((x) => (x === "llar" && c.llarText ? c.llarText : ETIQ_EQ[x]));
+    const pend = Object.keys(ETIQ_EQ).filter((x) => k[x] == null).length;
+    return [si.length ? `Sí: ${si.join(", ")}` : "", no.length ? `No: ${no.join(", ")}` : "", pend ? `Per confirmar: ${pend}` : ""].filter(Boolean);
+  }
+
+  // m: grup visible al mòbil (preu, total, espai, valoracio, equip, atencio); null = només a l'escriptori.
   const COLS = [
-    { key: "municipi", label: "Municipi", get: (c) => c.municipi, text: true },
-    { key: "p6", label: "Amb 6", grup: "pp", n: true, get: (c) => pp(c, 6), fmt: (v) => eur(v), millor: "min" },
-    { key: "p7", label: "Amb 7", grup: "pp", n: true, get: (c) => pp(c, 7), fmt: (v) => eur(v), millor: "min", buit: "No apta" },
-    { key: "t6", label: "Amb 6", grup: "tot", n: true, sep: true, get: (c) => total(c, 6), fmt: (v) => eur(v, 0), millor: "min" },
-    { key: "t7", label: "Amb 7", grup: "tot", n: true, get: (c) => total(c, 7), fmt: (v) => eur(v, 0), millor: "min", buit: "No apta" },
-    { key: "bcn", label: "Des de BCN", grup: "esp", n: true, sep: true, get: (c) => c.tempsBCN.minuts, fmt: (v) => fmtTemps(v), millor: "min" },
-    { key: "places", label: "Places", grup: "esp", n: true, get: (c) => c.capacitat, fmt: (v) => v, millor: "max" },
-    { key: "dorm", label: "Dorm.", grup: "esp", n: true, get: (c) => c.dormitoris, fmt: (v, c) => `${v}${c.dormitorisAvis ? "*" : ""}`, millor: "max" },
-    { key: "banys", label: "Banys", grup: "esp", n: true, get: (c) => c.banys, fmt: (v, c) => c.banysText, millor: "max" },
-    { key: "m2", label: "m²", grup: "esp", n: true, get: (c) => c.superficie, fmt: (v) => v, millor: "max", buit: "Per confirmar" },
-    { key: "nota", label: "Sobre 10", grup: "val", n: true, sep: true, get: (c) => nota10(c), fmt: (v) => num(v, 1), millor: "max", filtreMillor: notaFiable },
-    { key: "ress", label: "Ressenyes", grup: "val", n: true, get: (c) => c.valoracio.ressenyes, fmt: (v) => v },
-    ...["wifi", "jardi", "barbacoa", "llar", "roba", "mascotes", "aparcament"].map((k, i) => ({
-      key: k, label: { wifi: "Wi-Fi", jardi: "Jardí", barbacoa: "Barbacoa", llar: "Estufa", roba: "Roba de llit", mascotes: "Mascotes", aparcament: "Aparcament" }[k],
+    { key: "municipi", label: "Municipi", m: null, get: (c) => c.municipi, text: true },
+    { key: "p6", label: "Amb 6", lm: "Amb 6", m: "preu", grup: "pp", n: true, get: (c) => pp(c, 6), fmt: (v) => eur(v), millor: "min" },
+    { key: "p7", label: "Amb 7", lm: "Amb 7", m: "preu", grup: "pp", n: true, get: (c) => pp(c, 7), fmt: (v) => eur(v), millor: "min", buit: "No apta" },
+    { key: "t6", label: "Amb 6", lm: "Amb 6", m: "total", grup: "tot", n: true, sep: true, get: (c) => total(c, 6), fmt: (v) => eur(v, 0), millor: "min" },
+    { key: "t7", label: "Amb 7", lm: "Amb 7", m: "total", grup: "tot", n: true, get: (c) => total(c, 7), fmt: (v) => eur(v, 0), millor: "min", buit: "No apta" },
+    { key: "bcn", label: "Des de BCN", m: "valoracio", grup: "esp", n: true, sep: true, get: (c) => c.tempsBCN.minuts, fmt: (v) => fmtTemps(v), millor: "min" },
+    { key: "places", label: "Places", m: "espai", grup: "esp", n: true, get: (c) => c.capacitat, fmt: (v) => v, millor: "max" },
+    { key: "dorm", label: "Dorm.", m: "espai", grup: "esp", n: true, get: (c) => c.dormitoris, fmt: (v, c) => `${v}${c.dormitorisAvis ? "*" : ""}`, millor: "max" },
+    { key: "banys", label: "Banys", m: "espai", grup: "esp", n: true, get: (c) => c.banys, fmt: (v, c) => c.banysText, millor: "max" },
+    { key: "m2", label: "m²", m: "espai", grup: "esp", n: true, get: (c) => c.superficie, fmt: (v) => v, millor: "max", buit: "Per confirmar" },
+    { key: "nota", label: "Sobre 10", m: "valoracio", grup: "val", n: true, sep: true, get: (c) => nota10(c), fmt: (v) => num(v, 1), millor: "max", filtreMillor: notaFiable },
+    { key: "ress", label: "Ressenyes", m: "valoracio", grup: "val", n: true, get: (c) => c.valoracio.ressenyes, fmt: (v) => v },
+    ...Object.keys(ETIQ_EQ).map((k, i) => ({
+      key: k, label: ETIQ_EQ[k], m: null,
       grup: "eq", sep: i === 0, bool: true, get: (c) => c.caracteristiques[k], ordre: (c) => SI_NO(c.caracteristiques[k]),
     })),
-    { key: "atencio", label: "A tenir en compte", sep: true, get: (c) => avisosImportants(c).join(" ") || "—", text: true, llarg: true },
+    { key: "equipm", label: "Equipament confirmat", m: "equip", nomesMobil: true, get: (c) => resumEquipament(c), llista: true, llarg: true },
+    { key: "atencio", label: "A tenir en compte", m: "atencio", sep: true, get: (c) => avisosImportants(c).join(" ") || "—", text: true, llarg: true },
   ];
   const GRUPS = { pp: "Per persona", tot: "Total 4 nits", esp: "Espai i trajecte", val: "Valoració", eq: "Equipament" };
+  const GRUPS_MOBIL = { preu: "Per persona", total: "Total", espai: "Espai", valoracio: "Valoració", equip: "Equipament", atencio: "Atenció" };
+  const classeMobil = (c) => (c.nomesMobil ? `nomes-mobil m-${c.m}` : c.m ? `m-${c.m}` : "nomes-escriptori");
 
   function pintaResum() {
     const llista = visibles();
@@ -196,35 +210,38 @@
       millors[c.key] = { v, base: new Set(base.map((x) => x.id)) };
     });
 
-    // Capçalera de grups
+    // Capçalera de grups (només escriptori)
+    const colsEscriptori = COLS.filter((c) => !c.nomesMobil);
     let grups = `<tr class="grups"><th scope="col"></th>`;
     let i = 0;
-    while (i < COLS.length) {
-      const g = COLS[i].grup;
+    while (i < colsEscriptori.length) {
+      const g = colsEscriptori[i].grup;
       let n = 1;
-      while (g && COLS[i + n] && COLS[i + n].grup === g) n++;
-      grups += `<th scope="colgroup" colspan="${n}"${COLS[i].sep ? ' class="sep"' : ""}>${g ? GRUPS[g] : ""}</th>`;
+      while (g && colsEscriptori[i + n] && colsEscriptori[i + n].grup === g) n++;
+      grups += `<th scope="colgroup" colspan="${n}"${colsEscriptori[i].sep ? ' class="sep"' : ""}>${g ? GRUPS[g] : ""}</th>`;
       i += n;
     }
     grups += `<th scope="col"></th></tr>`;
 
     const ariaSort = (k) => (estat.resum.col === k ? (estat.resum.dir === "asc" ? "ascending" : "descending") : "none");
     const fletxa = (k) => (estat.resum.col === k ? (estat.resum.dir === "asc" ? "▲" : "▼") : "");
+    const etiqueta = (c) => (c.lm ? `<span class="nomes-escriptori">${c.label}</span><span class="nomes-mobil">${c.lm}</span>` : c.label);
     const cap = `<tr><th scope="col">Casa</th>` + COLS.map((c) => {
-      const cls = [c.n ? "n" : "", c.sep ? "sep" : ""].join(" ").trim();
+      const cls = [c.n ? "n" : "", c.sep ? "sep" : "", classeMobil(c)].join(" ").trim();
       if (c.llarg) return `<th scope="col" class="${cls}">${c.label}</th>`;
-      return `<th scope="col" class="${cls}" aria-sort="${ariaSort(c.key)}"><button type="button" data-ordena="${c.key}">${c.label}<span class="fletxa" aria-hidden="true">${fletxa(c.key)}</span></button></th>`;
-    }).join("") + `<th scope="col"><span class="sr">Accions</span></th></tr>`;
+      return `<th scope="col" class="${cls}" aria-sort="${ariaSort(c.key)}"><button type="button" data-ordena="${c.key}">${etiqueta(c)}<span class="fletxa" aria-hidden="true">${fletxa(c.key)}</span></button></th>`;
+    }).join("") + `<th scope="col" class="m-atencio"><span class="sr">Accions</span></th></tr>`;
 
     const files = ord.map((c) => {
       const cel = COLS.map((col) => {
         const v = col.get(c);
-        const cls = [col.n ? "n" : "", col.sep ? "sep" : ""];
+        const cls = [col.n ? "n" : "", col.sep ? "sep" : "", classeMobil(col)];
         if (col.bool) {
           const t = v === true ? "Sí" : v === false ? "No" : "Per confirmar";
           cls.push(v === true ? "si" : v === false ? "no" : "pend");
           return `<td class="${cls.join(" ").trim()}">${t}</td>`;
         }
+        if (col.llista) return `<td class="text ${cls.join(" ").trim()}">${v.map((x) => `<span class="full__linia">${esc(x)}</span>`).join("")}</td>`;
         if (col.llarg) return `<td class="text ${cls.join(" ").trim()}">${esc(v)}</td>`;
         if (v == null) { cls.push(col.buit === "No apta" ? "no" : "pend"); return `<td class="${cls.join(" ").trim()}">${col.buit || "Per confirmar"}</td>`; }
         const m = millors[col.key];
@@ -232,10 +249,25 @@
         return `<td class="${cls.join(" ").trim()}">${col.text ? esc(v) : col.fmt(v, c)}</td>`;
       }).join("");
       return `<tr><th scope="row"><span class="full__casa">${disc(c)}<a href="#casa-${c.id}" data-anar-casa="${c.id}">${esc(c.nom)}</a></span></th>${cel}
-        <td><button type="button" class="boto boto--text" data-descartar="${c.id}">Descartar<span class="sr"> ${esc(c.nom)}</span></button></td></tr>`;
+        <td class="m-atencio"><button type="button" class="boto boto--text" data-descartar="${c.id}">Descartar<span class="sr"> ${esc(c.nom)}</span></button></td></tr>`;
     }).join("");
 
-    $("#taula-resum").innerHTML = `<caption class="sr">Resum de les cases, ordenat per ${col ? col.label : "preu"}</caption><thead>${grups}${cap}</thead><tbody>${files}</tbody>`;
+    const t = $("#taula-resum");
+    t.dataset.mobil = estat.resumMobil;
+    t.innerHTML = `<caption class="sr">Resum de les cases, ordenat per ${col ? col.label : "preu"}</caption><thead>${grups}${cap}</thead><tbody>${files}</tbody>`;
+  }
+
+  function preparaResumMobil() {
+    const cont = $("#resum-grups");
+    cont.innerHTML = Object.entries(GRUPS_MOBIL).map(([k, t]) =>
+      `<button type="button" data-resum-mobil="${k}" aria-pressed="${k === estat.resumMobil}">${t}</button>`).join("");
+    cont.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-resum-mobil]");
+      if (!b) return;
+      estat.resumMobil = b.dataset.resumMobil;
+      $$("[data-resum-mobil]", cont).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      $("#taula-resum").dataset.mobil = estat.resumMobil;
+    });
   }
 
   /* ---------- Filtres ---------- */
@@ -865,6 +897,7 @@
   llegeixHash();
   pintaCapcalera();
   preparaFiltres();
+  preparaResumMobil();
   preparaFitxa();
   preparaActivitats();
   preparaEsdeveniments();

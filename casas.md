@@ -2,6 +2,8 @@
 
 > Fuente de verdad de los **datos** de los alojamientos. Los requisitos de la web están en `requisitos_web.md`.  
 > Este documento está redactado en castellano como documento de trabajo; **todo lo que aparezca en la web debe traducirse al catalán**.
+>
+> **Casas visibles en la web (decisión del 3 de noviembre de 2026):** solo las que admiten **7 personas o más**: casas 1, 5, 6, 7 y 8. Las casas 2, 3 y 4 (máximo 6) se mantienen en este documento y en `js/dades.js`, pero la web no las muestra (`config.capacitatMinimaWeb = 7`). Con ello, la zona B (Haut-Vallespir, solo casa 4) tampoco aparece en la web.
 
 ## 1. Datos generales del viaje
 
@@ -32,7 +34,7 @@ Precios totales para la estancia del 4 al 8 de diciembre de 2026 (4 noches), fac
 | 8 | Le Bellevue | 538 € | 89,67 € | 538 € | 76,86 € |
 
 Observaciones:
-- Las casas 2, 3 y 4 admiten un máximo de 6 personas: si finalmente son 7, quedan descartadas.
+- Las casas 2, 3 y 4 admiten un máximo de 6 personas: si finalmente son 7, quedan descartadas. **Desde el 3 de noviembre de 2026 ya no se muestran en la web.**
 - Las casas 6, 7 y 8 cuestan lo mismo para 6 que para 7 personas, así que el precio por persona baja si son siete.
 - Casa 7: el precio solo es válido si el anfitrión acepta cuatro noches (mínimo publicado: cinco).
 - Pendiente de confirmar en todas las casas si el importe incluye limpieza, tasas y ropa de cama/toallas. Hasta entonces, mostrar el aviso «Confirmar qué incluye el preu».
@@ -75,7 +77,7 @@ Los campos `null` o `PENDIENTE` significan que no se ha podido verificar la info
 - Perfil de alojamiento: buena opción para grupo, cerca de lago y actividades de Capcir; confirmar número real de dormitorios y coste de ropa de cama.
 - Fuente: anuncio Airbnb enlazado arriba.
 
-### Casa 2 — Pequeño chalet en EYNE
+### Casa 2 — Pequeño chalet en EYNE *(no se muestra en la web: máx. 6)*
 
 - Plataforma: Airbnb
 - URL: https://www.airbnb.es/rooms/19175569
@@ -110,7 +112,7 @@ Los campos `null` o `PENDIENTE` significan que no se ha podido verificar la info
 - Perfil: buena valoración, jardín vallado y ubicación útil para actividades de Cerdanya. Capacidad máxima de seis: no apta si finalmente son siete.
 - Fuente: anuncio Airbnb enlazado arriba.
 
-### Casa 3 — Casa estilo chalé, jardín y servicio de transporte para esquiar
+### Casa 3 — Casa estilo chalé, jardín y servicio de transporte para esquiar *(no se muestra en la web: máx. 6)*
 
 - Plataforma: Airbnb
 - URL: https://www.airbnb.es/rooms/738126941479631337
@@ -146,7 +148,7 @@ Los campos `null` o `PENDIENTE` significan que no se ha podido verificar la info
 - Perfil: interesante para una escapada de montaña con acceso a Font-Romeu y transporte a pistas; solo 6 plazas (no apta si son siete) y un baño.
 - Fuente: anuncio Airbnb enlazado arriba.
 
-### Casa 4 — Can Guillamou
+### Casa 4 — Can Guillamou *(no se muestra en la web: máx. 6)*
 
 - Plataforma: Airbnb
 - URL: https://www.airbnb.es/rooms/665784225225675684

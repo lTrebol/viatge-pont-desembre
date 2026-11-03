@@ -173,15 +173,17 @@ details[open] > summary .caixa-mes::before { content: "–"; }
 .logo { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; text-decoration: none; min-height: 44px; }
 .logo__icona { display: grid; place-items: center; width: 30px; height: 30px; border-radius: var(--radius-s); background: var(--color-zona-d); }
 .logo__icona svg { width: 18px; height: 18px; }
-.nav__enllacos { display: flex; gap: 22px; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.nav__enllacos { display: flex; gap: 18px; list-style: none; margin: 0 0 0 auto; padding: 0; }
 .nav__enllacos a { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--text-nav); text-decoration: none; }
 .nav__enllacos a:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* Pàgina actual: subratllat gruixut + pes (no només color) */
+.nav__enllacos a[aria-current="page"], .nav__mobil a[aria-current="page"] { font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .nav__mobil { display: none; margin-left: auto; position: relative; }
 .nav__mobil summary { list-style: none; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1.5px solid var(--color-tinta); border-radius: var(--radius-s); font-weight: 500; }
 .nav__mobil summary::-webkit-details-marker { display: none; }
 .nav__mobil ul { position: absolute; right: 0; top: calc(100% + var(--space-2)); list-style: none; margin: 0; padding: var(--space-2) 0; background: var(--color-fons); border: 1px solid var(--color-linia-forta); border-radius: var(--radius-s); min-width: 220px; }
 .nav__mobil a { display: flex; align-items: center; min-height: 44px; padding: 0 var(--space-4); text-decoration: none; }
-@media (max-width: 980px) {
+@media (max-width: 1100px) {
   .nav__enllacos { display: none; }
   .nav__mobil { display: block; }
 }
@@ -223,7 +225,24 @@ details[open] > summary .caixa-mes::before { content: "–"; }
 .seccio__cap h2 { font-size: var(--text-h2); }
 .seccio__cap > div:first-child { flex: 1 1 36rem; min-width: 0; }
 .seccio__cap p { margin-top: var(--space-2); max-width: 100ch; color: var(--color-tinta-2); }
-@media (max-width: 600px) { .seccio { padding-top: var(--space-12); } }
+.seccio__cap h1 { font-size: var(--text-h2); }
+/* Pàgines interiors: la primera secció comença just sota la navegació */
+.pagina > .seccio:first-child { padding-top: var(--space-8); }
+@media (max-width: 600px) { .seccio { padding-top: var(--space-12); } .pagina > .seccio:first-child { padding-top: var(--space-4); } }
+
+/* ---------- Inici: accessos a cada pàgina ---------- */
+.portes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+@media (max-width: 980px) { .portes { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .portes { grid-template-columns: 1fr; } }
+.porta {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--space-1) var(--space-3); height: 100%;
+  padding: 18px; border: 1px solid var(--color-linia); border-radius: var(--radius-m);
+  text-decoration: none; transition: background-color var(--motion-curta);
+}
+.porta:hover { background: var(--color-panell); }
+.porta__titol { font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+.porta__text { grid-column: 1; font-size: var(--text-petit); color: var(--color-tinta-2); }
+.porta__fletxa { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 22px; }
 
 /* ---------- Resum (full de càlcul) ---------- */
 .full { border: 1px solid var(--color-linia-forta); border-radius: var(--radius-m); overflow: auto; max-width: 100%; max-height: 80vh; }
@@ -326,7 +345,7 @@ input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--color-t
 .casa__valoracio { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; padding: var(--space-3) 18px; font-size: var(--text-petit); }
 .casa__valoracio small { color: var(--color-tinta-2); font-size: var(--text-petit); }
 .casa__franja { display: flex; align-items: center; gap: 10px; padding: var(--space-2) 18px; background: var(--color-panell); border-top: 1px solid var(--color-linia); border-bottom: 1px solid var(--color-linia); font-size: var(--text-meta); color: var(--color-tinta-2); }
-.casa__franja button { margin-left: auto; min-height: 32px; padding: 0; border: 0; background: none; color: var(--color-tinta); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: var(--text-meta); }
+.casa__franja button, .casa__franja a { margin-left: auto; min-height: 32px; padding: 0; border: 0; background: none; color: var(--color-tinta); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: var(--text-meta); }
 .casa__cos { display: flex; flex-direction: column; gap: 10px; padding: 14px 18px 18px; flex: 1; }
 .casa__meta { font-size: var(--text-meta); color: var(--color-tinta-2); }
 .casa__nom { font-size: var(--text-h3); }
@@ -554,8 +573,43 @@ input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--color-t
 .meteo__zona h3 { font-size: 20px; }
 .meteo__dia { display: flex; justify-content: space-between; gap: var(--space-2); font-variant-numeric: tabular-nums; border-top: 1px solid var(--color-separador-pla); padding-top: 6px; }
 
-/* ---------- Votació (oculta) ---------- */
-.votacio { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-5); }
+/* ---------- Votació ---------- */
+.votacio__panell { max-width: 560px; padding: 18px; background: var(--color-panell); border-radius: var(--radius-m); display: grid; gap: var(--space-2); }
+.votacio__entrada { display: grid; gap: var(--space-2); }
+.votacio__entrada label { font-weight: 600; }
+.votacio__fila { display: flex; gap: var(--space-2); }
+.votacio__fila select { flex: 1; min-width: 0; }
+.votacio__ajuda, .votacio__nota { font-size: var(--text-petit); color: var(--color-tinta-2); }
+.votacio__accions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-left: calc(-1 * var(--space-2)); }
+.votacio__avis { font-size: var(--text-petit); min-height: 1.5em; }
+.votacio__avis--error { font-weight: 600; }
+.votacio__avis--error::before { content: "Error: "; }
+.votacio__titol { margin-top: var(--space-8); font-size: var(--text-h3); }
+.votacio__estat { margin: var(--space-2) 0 var(--space-1); color: var(--color-tinta-2); }
+.votacio__qui-ha-votat { margin-bottom: var(--space-4); font-size: var(--text-petit); color: var(--color-tinta-2); }
+.votacio__qui-ha-votat b { font-weight: 600; color: var(--color-tinta); }
+.votacio__cases { list-style: none; margin: 0 0 var(--space-4); padding: 0; border-top: 1px solid var(--color-linia); }
+.vot {
+  display: grid; grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 1fr) 150px; gap: var(--space-4); align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--color-linia);
+}
+.vot__casa b { display: block; font-weight: 500; }
+.vot__casa small { color: var(--color-tinta-2); font-size: var(--text-petit); }
+.vot__xifres { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); font-size: var(--text-petit); font-variant-numeric: tabular-nums; }
+.vot__xifres span:first-child { font-weight: 600; }
+.vot__davant { background: var(--color-lila); border-radius: var(--radius-s); padding: 0 6px; font-size: var(--text-mini); font-weight: 600; }
+.barra--vot { background: var(--color-panell); }
+.vot--oberta { grid-template-columns: auto minmax(0, 1fr) 150px; }
+.vot .boto { width: 100%; }
+.vot__meu { font-size: var(--text-petit); font-weight: 600; text-align: right; }
+.vot .boto:disabled { opacity: .45; cursor: not-allowed; }
+.vot--meu .vot__casa b { font-weight: 700; }
+@media (max-width: 600px) {
+  .vot { grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-3); }
+  .vot--oberta { grid-template-columns: auto 1fr; }
+  .vot__resultat, .vot .boto, .vot__meu { grid-column: 2; }
+  .vot__meu { text-align: left; }
+}
 
 /* ---------- Peu ---------- */
 .peu { margin-top: var(--space-18); padding: var(--space-8) 0 96px; background: var(--color-panell); font-size: var(--text-mini); color: var(--color-tinta-2); }

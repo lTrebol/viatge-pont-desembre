@@ -1,7 +1,9 @@
 # Escapada de diciembre 2026 — Requisitos de diseño (UX/UI)
 
 > Documento de diseño visual y de experiencia de usuario. Complementa a:
-> - `requisitos_web.md`: funcionalidades, estructura de la página, idioma (catalán), mapa, publicación en GitHub Pages y votación oculta.
+> - `requisitos_web.md`: funcionalidades, estructura de páginas (una por sección, 4.20), idioma (catalán), mapa, publicación en GitHub Pages y votación (activa con Supabase, 4.8).
+>
+> **Actualización del 3 de noviembre de 2026:** la web muestra solo las 5 casas con capacidad para 7 o más (1, 5, 6, 7 y 8). Donde este documento dice «ocho casas», léase «las casas visibles». La web pasa a tener una página por sección (ver `DESIGN.md`, 9.1 y 9.1 bis).
 > - `casas.md`: datos de los alojamientos.
 >
 > Si este documento y `requisitos_web.md` entran en conflicto, **las funcionalidades las decide `requisitos_web.md`** y **el aspecto visual lo decide este documento** (y, una vez aprobado, `DESIGN.md`).

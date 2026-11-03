@@ -4,11 +4,20 @@
   "use strict";
 
   const D = window.DADES;
-  const CASES = D.cases;
-  const ZONES = D.zones;
+  // Cada pàgina declara qui és a <body data-pagina="...">.
+  const PAGINA = document.body.dataset.pagina || "inici";
+  // Només es mostren les cases amb prou places (config.capacitatMinimaWeb);
+  // la resta es conserven a dades.js però no surten enlloc de la web.
+  const CASES = D.cases.filter((c) => c.capacitat >= (D.config.capacitatMinimaWeb || 0));
+  // Zones i activitats: només les que tenen alguna casa visible.
+  const ZONES = Object.fromEntries(Object.entries(D.zones).filter(([k]) => CASES.some((c) => c.zona === k)));
+  const ACTIVITATS = D.activitats.filter((a) => ZONES[a.zona]);
+  const DADES_WEB = { ...D, cases: CASES, zones: ZONES, activitats: ACTIVITATS };
   const CATS = D.categoriesActivitats;
   const NITS = D.viatge.nits;
   const CLAU_DESCARTADES = "escapada-desembre-2026:descartades";
+  const CLAU_COMPARAR = "escapada-desembre-2026:comparar";
+  const NOMBRES = ["cap", "una", "dues", "tres", "quatre", "cinc", "sis", "set", "vuit", "nou", "deu"];
 
   /* ---------- Utilitats ---------- */
   const $ = (s, c = document) => c.querySelector(s);
@@ -66,9 +75,17 @@
     const g = JSON.parse(localStorage.getItem(CLAU_DESCARTADES) || "[]");
     if (Array.isArray(g)) g.filter((id) => casa(id)).forEach((id) => estat.descartades.add(id));
   } catch { /* sense localStorage: funciona només durant la visita */ }
+  // Les cases triades per comparar es recorden entre pàgines (només en aquest navegador).
+  try {
+    const g = JSON.parse(localStorage.getItem(CLAU_COMPARAR) || "[]");
+    if (Array.isArray(g)) estat.comparar = g.filter((id) => casa(id) && !estat.descartades.has(id)).slice(0, 3);
+  } catch { /* ignorat */ }
 
   function desaDescartades() {
     try { localStorage.setItem(CLAU_DESCARTADES, JSON.stringify([...estat.descartades])); } catch { /* ignorat */ }
+  }
+  function desaComparar() {
+    try { localStorage.setItem(CLAU_COMPARAR, JSON.stringify(estat.comparar)); } catch { /* ignorat */ }
   }
 
   const visibles = () => CASES.filter((c) => !estat.descartades.has(c.id));
@@ -133,8 +150,20 @@
   }
 
   /* ---------- Capçalera ---------- */
+  function pintaNav() {
+    const actiu = { votacio: D.config.votacioActiva === true, temps: D.config.meteoActiva === true };
+    $$("[data-nav]").forEach((el) => { if (el.dataset.nav in actiu) el.hidden = !actiu[el.dataset.nav]; });
+    $$(".nav [data-pag]").forEach((a) => { if (a.dataset.pag === PAGINA) a.setAttribute("aria-current", "page"); });
+  }
+
   function pintaCapcalera() {
     $("#ultima-actualitzacio").textContent = fmtData(D.config.lastUpdated);
+    $$("[data-nombre-cases]").forEach((el) => {
+      let t = String(el.dataset.nombreCases === "text" ? (NOMBRES[CASES.length] || CASES.length) : CASES.length);
+      if (el.classList.contains("majuscula")) t = t.charAt(0).toUpperCase() + t.slice(1);
+      el.textContent = t;
+    });
+    if (!$("#peces")) return;
     if (D.config.grupConfirmat) $("#hero-nota").textContent = `Preus consultats el ${fmtData(D.viatge.dataConsultaPreus)}.`;
 
     const b6 = CASES.reduce((a, b) => (pp(a, 6) <= pp(b, 6) ? a : b));
@@ -143,7 +172,7 @@
     const fotos = [...CASES].filter((c) => c.fotos.length).sort((a, b) => pp(a, 6) - pp(b, 6)).slice(0, 3);
     const peca = (c, x, y, r, z) => `<div class="peca" style="left:${x}px;top:${y}px;transform:rotate(${r}deg);z-index:${z}">
         <img src="${esc(c.fotos[0])}" alt="${esc(`Foto de ${c.nom}`)}" width="190" height="190"></div>`;
-    const etiqueta = (c, n, x, y, r, z, cls) => `<a class="etiqueta ${cls}" href="#casa-${c.id}" style="left:${x}px;top:${y}px;transform:rotate(${r}deg);z-index:${z}">
+    const etiqueta = (c, n, x, y, r, z, cls) => `<a class="etiqueta ${cls}" href="cases.html#casa-${c.id}" style="left:${x}px;top:${y}px;transform:rotate(${r}deg);z-index:${z}">
         ${disc(c)}<span class="etiqueta__nom">${esc(c.nom)}</span>
         <span><span class="etiqueta__preu">${eur(pp(c, n))}</span><span class="etiqueta__unitat">per persona amb ${n}</span></span></a>`;
     const pos = [[40, 20, -6, 1], [300, 0, 4, 1], [90, 215, 3, 2]];
@@ -248,7 +277,7 @@
         if (m && m.v != null && v === m.v && m.base.has(c.id)) cls.push("millor");
         return `<td class="${cls.join(" ").trim()}">${col.text ? esc(v) : col.fmt(v, c)}</td>`;
       }).join("");
-      return `<tr><th scope="row"><span class="full__casa">${disc(c)}<a href="#casa-${c.id}" data-anar-casa="${c.id}">${esc(c.nom)}</a></span></th>${cel}
+      return `<tr><th scope="row"><span class="full__casa">${disc(c)}<a href="cases.html#casa-${c.id}" data-anar-casa="${c.id}">${esc(c.nom)}</a></span></th>${cel}
         <td class="m-atencio"><button type="button" class="boto boto--text" data-descartar="${c.id}">Descartar<span class="sr"> ${esc(c.nom)}</span></button></td></tr>`;
     }).join("");
 
@@ -303,7 +332,7 @@
   /* ---------- Targetes ---------- */
   const ORDRES = {
     p6: { text: "Ordenades pel preu per persona amb 6.", f: (a, b) => pp(a, 6) - pp(b, 6) },
-    p7: { text: "Ordenades pel preu per persona amb 7. Les cases de màxim 6 persones van al final.", f: (a, b) => (pp(a, 7) ?? 1e9) - (pp(b, 7) ?? 1e9) || pp(a, 6) - pp(b, 6) },
+    p7: { text: CASES.every(apta7) ? "Ordenades pel preu per persona amb 7." : "Ordenades pel preu per persona amb 7. Les cases de màxim 6 persones van al final.", f: (a, b) => (pp(a, 7) ?? 1e9) - (pp(b, 7) ?? 1e9) || pp(a, 6) - pp(b, 6) },
     valoracio: { text: "Ordenades per valoració sobre 10. Les notes amb menys de 10 ressenyes van al final.", f: (a, b) => (notaFiable(b) - notaFiable(a)) || nota10(b) - nota10(a) || b.valoracio.ressenyes - a.valoracio.ressenyes },
     places: { text: "Ordenades per nombre de places.", f: (a, b) => b.capacitat - a.capacitat || pp(a, 6) - pp(b, 6) },
     bcn: { text: "Ordenades pel temps en cotxe des de Barcelona.", f: (a, b) => a.tempsBCN.minuts - b.tempsBCN.minuts },
@@ -334,7 +363,7 @@
         ${distintiu ? `<span class="casa__distintiu">${distintiu}</span>` : ""}
       </div>
       <div class="casa__valoracio"><span aria-hidden="true">★</span><b>${valoracioText(c.valoracio)}</b><small>a ${plataformaNota(c.valoracio)} (${c.valoracio.ressenyes} ${c.valoracio.ressenyes === 1 ? "ressenya" : "ressenyes"})</small></div>
-      <div class="casa__franja">${disc(c, true)}<span>${esc(c.municipi)}, ${esc(c.comarca)}</span><button type="button" data-veure-mapa="${c.id}">Mapa<span class="sr"> de ${esc(c.nom)}</span></button></div>
+      <div class="casa__franja">${disc(c, true)}<span>${esc(c.municipi)}, ${esc(c.comarca)}</span><a href="mapa.html#casa-${c.id}">Mapa<span class="sr"> de ${esc(c.nom)}</span></a></div>
       <div class="casa__cos">
         <p class="casa__meta">${c.capacitat} places, ${c.dormitoris}${c.dormitorisAvis ? "*" : ""} dormitoris, ${esc(c.banysText)} ${c.banysText === "1" ? "bany" : "banys"}${c.superficie ? `, ${c.superficie} m²` : ""}<br>${fmtTemps(c.tempsBCN.minuts)} des de Barcelona</p>
         <h3 class="casa__nom" id="nom-casa-${c.id}">${esc(c.nom)}</h3>
@@ -397,9 +426,13 @@
     if (!m) return;
     const ids = [...new Set(m[1].split("-").map(Number))].filter((id) => casa(id) && !estat.descartades.has(id)).slice(0, 3);
     estat.comparar = ids;
+    desaComparar();
   }
 
+  // L'enllaç amb #comparar=... només es manté a la pàgina del comparador (per compartir-lo).
   function escriuHash() {
+    desaComparar();
+    if (PAGINA !== "comparar") return;
     const base = location.pathname + location.search;
     if (estat.comparar.length >= 2) history.replaceState(null, "", `${base}#comparar=${estat.comparar.join("-")}`);
     else if (/^#comparar=/.test(location.hash)) history.replaceState(null, "", base);
@@ -430,7 +463,24 @@
     });
   }
 
+  // Barra fixa a les pàgines on es trien cases: porta a la pàgina del comparador.
+  function pintaBarraComparar() {
+    const barra = $("#barra-comparar");
+    if (!barra) return;
+    const cs = estat.comparar.map(casa).filter(Boolean);
+    barra.hidden = cs.length === 0;
+    $("#barra-comparar-text").textContent = cs.length === 1
+      ? `Has triat ${cs[0].nom}. Tria'n una altra per comparar.`
+      : `${cs.length} cases triades per comparar.`;
+    const a = $("a", barra);
+    a.hidden = cs.length < 2;
+    a.href = `comparar.html#comparar=${estat.comparar.join("-")}`;
+  }
+
   function pintaComparador() {
+    pintaBarraComparar();
+    const cos = $("#comparador-cos");
+    if (!cos) return;
     const cs = estat.comparar.map(casa).filter(Boolean);
     const triades = $("#comparador-triades");
     triades.innerHTML = cs.length
@@ -438,16 +488,8 @@
       : "";
     triades.hidden = cs.length === 0;
 
-    const barra = $("#barra-comparar");
-    barra.hidden = cs.length === 0;
-    $("#barra-comparar-text").textContent = cs.length === 1
-      ? `Has triat ${cs[0].nom}. Tria'n una altra per comparar.`
-      : `${cs.length} cases triades per comparar.`;
-    $("a", barra).hidden = cs.length < 2;
-
-    const cos = $("#comparador-cos");
     if (cs.length < 2) {
-      cos.innerHTML = `<p class="buit">Tria 2 o 3 cases amb el botó «+ Comparar» de les fitxes.</p>`;
+      cos.innerHTML = `<p class="buit">${cs.length === 1 ? `Has triat ${esc(cs[0].nom)}. ` : ""}Tria 2 o 3 cases amb el botó «+ Comparar» de la pàgina <a href="cases.html">Cases</a>.</p>`;
       return;
     }
 
@@ -544,7 +586,7 @@
       <div class="popup__preu">${eur(pp(c, 6))}</div><div>per persona amb 6</div>
       <div>${p7 == null ? "Màxim 6 persones" : `<b>${eur(p7)}</b> per persona amb 7`}</div>
       <div class="popup__nota">${fmtTemps(c.tempsBCN.minuts)} des de Barcelona</div>
-      <p><a href="#casa-${c.id}" data-anar-casa="${c.id}">Veure la fitxa</a></p>`;
+      <p><a href="cases.html#casa-${c.id}" data-anar-casa="${c.id}">Veure la fitxa</a></p>`;
   }
 
   function iniciaMapa() {
@@ -571,7 +613,7 @@
     }
 
     capaAct = L.layerGroup().addTo(mapa);
-    D.activitats.filter((a) => a.coords).forEach((a) => {
+    ACTIVITATS.filter((a) => a.coords).forEach((a) => {
       const m = L.marker(a.coords, { title: `${a.nom} (${CATS[a.cat]})`, alt: a.nom, keyboard: false });
       m.bindPopup(() => `<div class="popup__nom">${esc(a.nom)}</div><div class="popup__lloc">${esc(CATS[a.cat])}, zona ${a.zona}</div><p>${esc(a.descripcio)}</p><div class="popup__nota">Desembre: ${esc(a.estat)}</div>`);
       marcadorsAct.set(a.id, { m, a });
@@ -631,22 +673,26 @@
         <span class="preu">${eur(pp(c, 6))}<small>${pp(c, 7) == null ? "Màxim 6" : `${eur(pp(c, 7))} amb 7`}</small></span></button></li>`).join("");
   }
 
-  function centraCasa(id, desplaca) {
+  function centraCasa(id) {
     const c = casa(id);
     if (!c || !mapa) return;
     estat.zonaDestacada = c.zona;
     $("#m-activitats").checked = true;
     refrescaActivitatsMapa();
     $$("#mapa-llista [data-centra]").forEach((b) => b.setAttribute("aria-current", String(Number(b.dataset.centra) === id)));
-    if (desplaca) $("#mapa").scrollIntoView({ behavior: rmMotion() ? "auto" : "smooth" });
-    setTimeout(() => {
-      mapa.invalidateSize();
-      mapa.setView([c.coords.lat, c.coords.lon], 12, { animate: !rmMotion() });
-      marcadors.get(id).openPopup();
-    }, desplaca ? 350 : 0);
+    mapa.invalidateSize();
+    mapa.setView([c.coords.lat, c.coords.lon], 12, { animate: !rmMotion() });
+    marcadors.get(id).openPopup();
   }
 
+  // Des de la pàgina de cases: desplaça fins a la targeta. Des d'altres pàgines: obre la fitxa
+  // emergent si n'hi ha, o va a la pàgina de cases.
   function anarACasa(id) {
+    if (PAGINA !== "cases") {
+      if ($("#fitxa") && casa(id)) obreFitxa(id);
+      else location.href = `cases.html#casa-${id}`;
+      return;
+    }
     let el = document.getElementById(`casa-${id}`);
     if (!el && estat.descartades.has(id)) { avisa("Aquesta casa està descartada. Recupera-la al final del llistat."); return; }
     if (!el) { $("#form-filtres").reset(); pintaCases(); el = document.getElementById(`casa-${id}`); }
@@ -662,7 +708,7 @@
   function preparaActivitats() {
     const cats = [["totes", "Totes"], ...Object.entries(CATS)];
     $("#pestanyes").innerHTML = cats.map(([k, t]) => {
-      const n = k === "totes" ? D.activitats.length : D.activitats.filter((a) => a.cat === k).length;
+      const n = k === "totes" ? ACTIVITATS.length : ACTIVITATS.filter((a) => a.cat === k).length;
       const sel = k === estat.catActivitat;
       return `<button type="button" role="tab" id="tab-${k}" data-cat="${k}" aria-selected="${sel}" aria-controls="llista-activitats" tabindex="${sel ? 0 : -1}">${esc(t)} (${n})</button>`;
     }).join("");
@@ -703,7 +749,7 @@
   }
 
   function pintaActivitats() {
-    const llista = D.activitats.filter((a) => estat.catActivitat === "totes" || a.cat === estat.catActivitat);
+    const llista = ACTIVITATS.filter((a) => estat.catActivitat === "totes" || a.cat === estat.catActivitat);
     $("#avis-muntanya").hidden = !llista.some((a) => a.muntanya || a.cat === "rutes");
     const html = Object.entries(ZONES).map(([k, z]) => {
       const acts = llista.filter((a) => a.zona === k);
@@ -802,7 +848,7 @@
     $("#fitxa-titol").textContent = c.nom;
     $("#fitxa-cos").innerHTML = fitxaHTML(c);
     d.dataset.casa = String(id);
-    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    if (!d.open) { if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", ""); }
     $("#fitxa-cos").scrollTop = 0;
   }
 
@@ -821,15 +867,14 @@
   /* ---------- Esdeveniments globals ---------- */
   function preparaEsdeveniments() {
     document.addEventListener("click", async (e) => {
-      const t = e.target.closest("[data-comparar],[data-descartar],[data-recuperar],[data-treure],[data-veure-mapa],[data-centra],[data-foto-pas],[data-foto-index],[data-detalls],[data-copiar-preguntes],[data-ordena],[data-ordre],[data-anar-casa]");
+      const t = e.target.closest("[data-comparar],[data-descartar],[data-recuperar],[data-treure],[data-centra],[data-foto-pas],[data-foto-index],[data-detalls],[data-copiar-preguntes],[data-ordena],[data-ordre],[data-anar-casa]");
       if (!t) return;
       const d = t.dataset;
       if (d.comparar) commutaComparar(Number(d.comparar));
       else if (d.descartar) descarta(Number(d.descartar));
       else if (d.recuperar) recupera(Number(d.recuperar));
       else if (d.treure) commutaComparar(Number(d.treure));
-      else if (d.veureMapa) centraCasa(Number(d.veureMapa), true);
-      else if (d.centra) centraCasa(Number(d.centra), false);
+      else if (d.centra) centraCasa(Number(d.centra));
       else if (d.fotoPas) { const id = Number(t.closest("[data-carrusel]").dataset.carrusel); mouFoto(id, (fotoActual.get(id) || 0) + Number(d.fotoPas)); }
       else if (d.fotoIndex) mouFoto(Number(d.casaFoto), Number(d.fotoIndex));
       else if (d.detalls) obreFitxa(Number(d.detalls));
@@ -873,44 +918,46 @@
     onScroll();
     $(".nav__mobil").addEventListener("click", (e) => { if (e.target.closest("a")) e.currentTarget.removeAttribute("open"); });
 
-    // Els enllaços a «Què falta preguntar» obren el desplegable.
-    document.addEventListener("click", (e) => {
-      if (e.target.closest('a[href="#preguntes"]')) $("#preguntes-desplegable").open = true;
-    });
-    if (location.hash === "#preguntes") $("#preguntes-desplegable").open = true;
-
     window.addEventListener("hashchange", () => {
-      if (location.hash === "#preguntes") $("#preguntes-desplegable").open = true;
-      if (/^#comparar=/.test(location.hash)) { llegeixHash(); pintaComparador(); pintaCases(); }
+      if (PAGINA === "comparar" && /^#comparar=/.test(location.hash)) { llegeixHash(); pintaComparador(); }
+      const m = location.hash.match(/^#casa-(\d+)$/);
+      if (m && PAGINA === "cases") anarACasa(Number(m[1]));
+      if (m && PAGINA === "mapa") centraCasa(Number(m[1]));
     });
   }
 
+  // Cada funció comprova si la seva part existeix a la pàgina actual.
   function actualitzaLlistes() {
-    pintaResum();
-    pintaCases();
-    pintaDescartades();
+    if ($("#taula-resum")) pintaResum();
+    if ($("#llista-cases")) pintaCases();
+    if ($("#descartades")) pintaDescartades();
     pintaComparador();
-    pintaPreguntes();
+    if ($("#llista-preguntes")) pintaPreguntes();
   }
 
   /* ---------- Inici ---------- */
-  llegeixHash();
+  if (PAGINA === "comparar") { llegeixHash(); escriuHash(); }
+  pintaNav();
   pintaCapcalera();
-  preparaFiltres();
-  preparaResumMobil();
-  preparaFitxa();
-  preparaActivitats();
+  if ($("#form-filtres")) preparaFiltres();
+  if ($("#resum-grups")) preparaResumMobil();
+  if ($("#fitxa")) preparaFitxa();
+  if ($("#pestanyes")) preparaActivitats();
   preparaEsdeveniments();
   actualitzaLlistes();
-  pintaActivitats();
-  pintaLlistaMapa();
-  iniciaMapa();
+  if ($("#llista-activitats")) pintaActivitats();
+  if ($("#mapa-leaflet")) { pintaLlistaMapa(); iniciaMapa(); }
 
-  if (estat.comparar.length >= 2) {
-    setTimeout(() => $("#comparador").scrollIntoView({ behavior: "auto" }), 0);
+  // Enllaços d'una altra pàgina a una casa concreta (cases.html#casa-5, mapa.html#casa-5).
+  const casaHash = location.hash.match(/^#casa-(\d+)$/);
+  if (casaHash) {
+    const id = Number(casaHash[1]);
+    if (PAGINA === "cases") setTimeout(() => anarACasa(id), 0);
+    if (PAGINA === "mapa") setTimeout(() => centraCasa(id), 0);
   }
 
-  // Mòduls desactivats: només s'executen amb l'interruptor actiu.
-  if (D.config.meteoActiva === true && window.Meteo) window.Meteo.inicialitzar(D);
-  if (D.config.votacioActiva === true && window.Votacio) window.Votacio.inicialitzar(D);
+  // Mòduls opcionals: només s'executen amb l'interruptor actiu i a la seva pàgina.
+  if (D.config.meteoActiva === true && window.Meteo && $("#meteo")) window.Meteo.inicialitzar(DADES_WEB);
+  if (D.config.votacioActiva === true && window.Votacio && $("#votacio")) window.Votacio.inicialitzar(DADES_WEB);
+  else if ($("#votacio-no-connectada")) $("#votacio-no-connectada").hidden = false;
 })();

@@ -10,7 +10,7 @@
 
 1. **Blanco y pastel con función.** El fondo es blanco. El color pastel identifica una zona (A–D) o señala el mejor valor; nunca decora.
 2. **Siempre dos precios.** Precio por persona con 6 y con 7, visibles a la vez. No hay selector.
-3. **El lugar fijo de cada dato.** Las ocho tarjetas y las ocho filas del Resum tienen la misma estructura.
+3. **El lugar fijo de cada dato.** Todas las tarjetas y todas las filas del Resum tienen la misma estructura.
 4. **Un momento memorable:** las piezas giradas de la cabecera (fotos + etiquetas pastel con las casas más económicas con 6 y con 7). El resto, sobrio.
 5. **Lo pendiente es neutro.** «Per confirmar» y «No apta» en gris, nunca en rojo.
 
@@ -136,10 +136,14 @@ Se prueba a 375, 768 y 1280 px.
 ## 9. Componentes
 
 ### 9.1. Navegación
-Panel `--color-panell`, radio `s`, relleno 10 × 12 px, fijo arriba (`position: sticky`). Logotipo: cuadrado de 30 px en `--color-zona-d` con un icono de montaña en línea, y el texto «Escapada de desembre» en 18 px/600. Enlaces: «Resum», «Cases», «Comparar», «Mapa», «Activitats», en 15 px. En móvil, solo el logotipo y un menú desplegable «Seccions».
+Panel `--color-panell`, radio `s`, relleno 10 × 12 px, fijo arriba (`position: sticky`). Logotipo: cuadrado de 30 px en `--color-zona-d` con un icono de montaña en línea, y el texto «Escapada de desembre» en 18 px/600. Enlaces (una página cada uno): «Resum», «Cases», «Comparar», «Mapa», «Activitats», «Què falta preguntar», «Votació» (y «El temps» cuando se active), en 15 px con 18 px de separación. La página actual va en 600 con subrayado de 2 px a 6 px del texto (`aria-current="page"`). El logotipo lleva al inicio. Por debajo de 1100 px, solo el logotipo y un menú desplegable «Seccions», que añade «Inici» al principio.
+
+### 9.1 bis. Páginas
+- Cada sección es una página. En las páginas interiores, el título de la sección es el `h1` (con el tamaño de `--text-h2`) y la primera sección empieza 32 px bajo la navegación (16 px en móvil), sin cabecera verde.
+- **Inicio:** la cabecera (9.2) y, debajo, «Per on vols començar?» con un acceso por página: rejilla de 3 columnas (2 en tableta, 1 en móvil) de bloques con borde `linia`, radio `m`, relleno 18 px; título en 20 px/600, una frase en 14 px `tinta-2` y una flecha «→» a la derecha. Hover: fondo `panell`.
 
 ### 9.2. Cabecera
-Bloque `--color-hero` a todo el ancho. Izquierda: título, texto de 17 px, botón de contorno «Veure el resum de les 8 cases» y la nota «Falta confirmar si som 6 o 7. Preus consultats l'1 de novembre de 2026.» Derecha: composición de 400 px de alto con 3 fotos cuadradas de 190 px y 2 etiquetas de 150 px, giradas entre −6° y +5°. Las etiquetas muestran la casa más económica con 6 (en el color de su zona) y con 7 (en lila), calculadas con los datos. En móvil, la composición se escala al 80 %.
+Bloque `--color-hero` a todo el ancho. Izquierda: título, texto de 17 px, botón de contorno «Veure el resum de les N cases» (N calculado: hoy 5) y la nota «Falta confirmar si som 6 o 7. Preus consultats l'1 de novembre de 2026.» Derecha: composición de 400 px de alto con 3 fotos cuadradas de 190 px y 2 etiquetas de 150 px, giradas entre −6° y +5°. Las etiquetas muestran la casa más económica con 6 (en el color de su zona) y con 7 (en lila), calculadas con los datos. En móvil, la composición se escala al 80 %.
 
 ### 9.3. Resum (hoja de cálculo)
 - Contenedor con borde `linia-forta`, radio `m` y `overflow: auto`. Tabla con un ancho mínimo de 1250 px.
@@ -152,7 +156,7 @@ Bloque `--color-hero` a todo el ancho. Izquierda: título, texto de 17 px, botó
 
 ### 9.4. Tarjeta de casa (modelo page3)
 Estructura fija, de arriba abajo:
-1. **Foto** 16:10 con carrusel: flechas «‹» y «›» de 44 × 44 px (fondo blanco, borde de tinta de 1,5 px, radio `s`) centradas verticalmente a 10 px de cada lado, y contador «2 de 6» abajo a la derecha. La foto que se ve se mantiene al reordenar y se comparte con la ficha emergente. Arriba a la derecha, «Màxim 6 persones» (fondo blanco, borde de tinta de 1,5 px, 13 px/600) solo en las casas 2, 3 y 4. Abajo a la izquierda, como mucho un distintivo lila: «Més econòmica amb 6», «Més econòmica amb 7», «Millor valorada» o «La més gran».
+1. **Foto** 16:10 con carrusel: flechas «‹» y «›» de 44 × 44 px (fondo blanco, borde de tinta de 1,5 px, radio `s`) centradas verticalmente a 10 px de cada lado, y contador «2 de 6» abajo a la derecha. La foto que se ve se mantiene al reordenar y se comparte con la ficha emergente. Arriba a la derecha, «Màxim 6 persones» (fondo blanco, borde de tinta de 1,5 px, 13 px/600) solo en casas de máximo 6 (hoy no se muestra ninguna). Abajo a la izquierda, como mucho un distintivo lila: «Més econòmica amb 6», «Més econòmica amb 7», «Millor valorada» o «La més gran».
 2. **Valoración:** «★ 4,98 de 5 a Airbnb (44 ressenyes)», en 14 px.
 3. **Franja** `panell` con disco de zona de 20 px y «Municipi, Comarca», en 13,5 px `tinta-2`.
 4. **Metadatos:** «6 places, 2 dormitoris, 1,5 banys, 84 m²» y, en otra línea, «2 h 20 min des de Barcelona».
@@ -175,14 +179,14 @@ Estructura fija, de arriba abajo:
 - Casas 1–7: círculo de 1800 m de radio con relleno del pastel de la zona (opacidad 0,45) y borde `zona-vora` de 1,5 px, más un marcador cuadrado de 32 px (radio `s`, pastel, borde de tinta, número).
 - Casa 8: marcador en forma de gota (cuadrado girado 45°), sin círculo.
 - Actividades: punto de 12 px en el pastel de la zona con borde de tinta.
-- Escritorio: mapa de 600 px de alto y, a su lado, una lista de 330 px con las 8 casas (disco, nombre, municipio, €/pers. amb 6 y amb 7 o «Màxim 6»). Móvil: el mapa a todo el ancho (420 px) y la lista debajo.
+- Escritorio: mapa de 600 px de alto y, a su lado, una lista de 330 px con las casas visibles (disco, nombre, municipio, €/pers. amb 6 y amb 7 o «Màxim 6»). Móvil: el mapa a todo el ancho (420 px) y la lista debajo.
 - Ventana emergente: nombre, municipio y zona, precisión de la ubicación, precio con 6 en 22 px/700, precio con 7 y tiempo desde Barcelona.
 
 ### 9.7. Actividades
 Agrupadas por zona en **desplegables** (`<details>`), cerrados por defecto, para que la página no sea tan larga. Cada cabecera de 64 px de alto lleva la caja «+», una muestra de 14 px del color de la zona, «Zona X: nombre» en 24 px (20 px en móvil) y, a la derecha, el número de actividades. Se recuerda qué zonas están abiertas al cambiar de pestaña. Cada actividad es una fila de lista, no una tarjeta: nombre en 16 px/500, tipo en 14 px `tinta-2`, estado en diciembre en 14 px `neutre` y enlace a la fuente. Pestañas por tipo con el selector segmentado de page1 (fondo `panell`, opción activa en tinta).
 
 ### 9.8. «Què falta preguntar»
-Toda la sección es un **desplegable** cerrado por defecto: la cabecera de 72 px lleva la caja «+», el título de sección (`--text-h2`) y, a la derecha, el número de casas. Los enlaces de la navegación a esta sección lo abren. Dentro:
+Página propia (ya no es un desplegable): cabecera de sección normal con el número de casas a la derecha y, debajo, una tarjeta por casa en dos columnas. Dentro de cada una:
 Lista con un «?» en cajita de 20 px; texto en 14 px. Botón de contorno «Copiar les preguntes»; tras copiar, el texto cambia a «Preguntes copiades» durante 2 s.
 
 ### 9.9. Ficha emergente («Veure detalls»)
@@ -192,10 +196,17 @@ Lista con un «?» en cajita de 20 px; texto en 14 px. Botón de contorno «Copi
 - Acciones al final: «Copiar les preguntes» (contorno) y «Veure l'anunci» (relleno).
 
 ### 9.10. Descartar
-Acción de texto «Descartar», en 14 px subrayado. Bloque final plegado «Cases descartades (N)» con la nota «Només ho veus tu, en aquest navegador» y botones «Recuperar».
+Acción de texto «Descartar», en 14 px subrayado. Bloque final plegado «Cases descartades (N)» con la nota «Només ho veus tu, en aquest navegador» y botones «Recuperar», al final de Cases y de Resum.
+
+### 9.10 bis. Votación
+- Panel `panell` de hasta 560 px, radio `m`, relleno 18 px: etiqueta «Qui ets?» en 600, desplegable de 44 px con los nombres y botón relleno «Sóc jo»; ayuda en 14 px `tinta-2`. Una vez elegido: «Hola, Nom. Has votat X.» y acciones de texto «Retirar el meu vot» y «No ets tu? Canvia de nom». Mensajes de error precedidos de «Error:» en 600 (no solo color).
+- Título «Cases» (`--text-h3`) mientras está abierta; «Resultats» al cerrarse. Debajo, línea de estado y «Han votat: … Falten: …» en 14 px, con las etiquetas en 600.
+- **Abierta:** una fila por casa, separadas por `linia`: disco de zona, nombre (500; 700 si es tu voto) y «Municipi · €/pers. amb 7», y botón de contorno de 150 px «Votar» o relleno «✓ El teu vot» (`aria-pressed`). Sin números. Botones al 45 % de opacidad cuando están desactivados.
+- **Cerrada:** cada fila añade recuento («2 vots», «29 %») con la marca lila «Més votada» y una barra de 8 px (pista `panell`, relleno tinta); en lugar del botón, «✓ El teu vot» en 14 px/600 en tu casa.
+- En móvil, recuento y botón bajo el nombre.
 
 ### 9.11. Previsión del tiempo (desactivada)
-Cuando se active: cuatro bloques en el pastel de cada zona, cada uno con el nombre de la zona, la temperatura mínima y máxima y la precipitación y nieve del 4 al 8 de diciembre, y la fuente «Open-Meteo» con la hora de actualización.
+Cuando se active: un bloque por zona con casas visibles (hoy tres: A, C y D) en el pastel de cada zona, cada uno con el nombre de la zona, la temperatura mínima y máxima y la precipitación y nieve del 4 al 8 de diciembre, y la fuente «Open-Meteo» con la hora de actualización.
 
 ### 9.12. Imagen para compartir (`img/compartir.png`)
 1200 × 630 px, fondo `--color-hero`, título «Escapada de desembre» en Hanken Grotesk 500 a 88 px, la línea «Del 4 al 8 de desembre de 2026» a 40 px y, a la derecha, la composición de piezas giradas de la cabecera.

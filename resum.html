@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resum de les cases · Escapada de desembre 2026</title>
+  <meta name="description" content="Totes les cases candidates en una taula ordenable: preus per a 6 i 7 persones, espai, valoració i equipament.">
+  <meta name="theme-color" content="#EAF5DF">
+
+  <!-- Vista prèvia en compartir (Open Graph / Twitter) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ca_ES">
+  <meta property="og:title" content="Resum de les cases · Escapada de desembre 2026">
+  <meta property="og:description" content="Totes les cases candidates en una taula ordenable: preus per a 6 i 7 persones, espai, valoració i equipament.">
+  <meta property="og:url" content="https://ltrebol.github.io/viatge-pont-desembre/resum.html">
+  <meta property="og:image" content="https://ltrebol.github.io/viatge-pont-desembre/img/compartir.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Escapada de desembre, del 4 al 8 de desembre de 2026">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://ltrebol.github.io/viatge-pont-desembre/img/compartir.png">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23C9F296'/%3E%3Cpath d='M16 6 4 26h24z' fill='none' stroke='%231C2618' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/estils.css">
+</head>
+<body data-pagina="resum">
+  <a class="salt" href="#contingut">Salta al contingut</a>
+
+  <!-- Navegació: igual a totes les pàgines; app.js marca la pàgina actual. -->
+  <div class="nav-embolcall">
+    <div class="contenidor">
+      <nav class="nav" aria-label="Seccions">
+        <a class="logo" href="index.html" data-pag="inici">
+          <span class="logo__icona" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 3 2 17h16z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.2 8 10 10l2.8-2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          <span>Escapada de desembre</span>
+        </a>
+        <ul class="nav__enllacos">
+          <li><a href="resum.html" data-pag="resum">Resum</a></li>
+          <li><a href="cases.html" data-pag="cases">Cases</a></li>
+          <li><a href="comparar.html" data-pag="comparar">Comparar</a></li>
+          <li><a href="mapa.html" data-pag="mapa">Mapa</a></li>
+          <li><a href="activitats.html" data-pag="activitats">Activitats</a></li>
+          <li><a href="preguntes.html" data-pag="preguntes">Què falta preguntar</a></li>
+          <li data-nav="votacio"><a href="votacio.html" data-pag="votacio">Votació</a></li>
+          <li data-nav="temps" hidden><a href="temps.html" data-pag="temps">El temps</a></li>
+        </ul>
+        <details class="nav__mobil">
+          <summary>Seccions</summary>
+          <ul>
+            <li><a href="index.html" data-pag="inici">Inici</a></li>
+            <li><a href="resum.html" data-pag="resum">Resum</a></li>
+            <li><a href="cases.html" data-pag="cases">Cases</a></li>
+            <li><a href="comparar.html" data-pag="comparar">Comparar</a></li>
+            <li><a href="mapa.html" data-pag="mapa">Mapa</a></li>
+            <li><a href="activitats.html" data-pag="activitats">Activitats</a></li>
+            <li><a href="preguntes.html" data-pag="preguntes">Què falta preguntar</a></li>
+            <li data-nav="votacio"><a href="votacio.html" data-pag="votacio">Votació</a></li>
+            <li data-nav="temps" hidden><a href="temps.html" data-pag="temps">El temps</a></li>
+          </ul>
+        </details>
+      </nav>
+    </div>
+  </div>
+
+  <main id="contingut" class="pagina">
+    <section class="seccio" id="resum" aria-labelledby="titol-resum">
+      <div class="contenidor">
+        <div class="seccio__cap">
+          <div>
+            <h1 id="titol-resum">Resum de les <span data-nombre-cases="xifra">5</span> cases</h1>
+            <p>Toca una capçalera per ordenar i el nom d'una casa per veure'n la fitxa.</p>
+          </div>
+        </div>
+        <div class="segment full__grups" id="resum-grups" role="group" aria-label="Columnes que es mostren"></div>
+        <div class="full" tabindex="0" role="region" aria-labelledby="titol-resum">
+          <table class="full__taula" id="taula-resum"></table>
+        </div>
+        <div class="full__llegenda">
+          <span><i class="mostra-millor" aria-hidden="true"></i>Millor valor de la columna</span>
+          <span>Les notes d'Airbnb (de 5) es multipliquen per 2 per comparar-les amb Booking (de 10). Les notes amb menys de 10 ressenyes no opten a «Millor».</span>
+          <span>Temps des de Barcelona: sense trànsit ni neu.</span>
+          <span>* Dormitoris per confirmar.</span>
+        </div>
+        <details class="descartades" id="descartades" hidden>
+          <summary><span class="caixa-mes" aria-hidden="true"></span><span id="descartades-titol">Cases descartades</span></summary>
+          <p class="descartades__nota">Només ho veus tu, en aquest navegador.</p>
+          <ul id="llista-descartades"></ul>
+        </details>
+      </div>
+    </section>
+  </main>
+  <dialog class="fitxa" id="fitxa" aria-labelledby="fitxa-titol">
+    <div class="fitxa__cap">
+      <h2 id="fitxa-titol"></h2>
+      <button type="button" class="boto" id="fitxa-tancar">Tancar</button>
+    </div>
+    <div class="fitxa__scroll" id="fitxa-cos"></div>
+  </dialog>
+  <footer class="peu">
+    <div class="contenidor">
+      <p>Última actualització: <span id="ultima-actualitzacio"></span>. Preus facilitats pel grup per a l'estada del 4 al 8 de desembre de 2026 (4 nits). La disponibilitat no està comprovada: confirmeu-la a cada plataforma abans de reservar.</p>
+      <p>Temps en cotxe des de la plaça de Catalunya calculats amb OSRM (dades d'OpenStreetMap), sense trànsit ni neu. Mapa: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Fotos: anuncis d'Airbnb.</p>
+    </div>
+  </footer>
+
+  <p class="avis-copiat" id="avis-copiat" role="status" aria-live="polite"></p>
+
+  <script src="js/dades.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

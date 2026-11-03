@@ -16,15 +16,28 @@
 
 window.DADES = {
   config: {
-    // Interruptor únic de la votació (vegeu js/votacio.js). Amb false: secció oculta i cap codi executat.
-    votacioActiva: false,
+    // Interruptor únic de la votació (vegeu js/votacio.js i supabase/esquema.sql).
+    // Sense codis: cada persona tria el seu nom. La data límit i la llista de noms es
+    // configuren a Supabase (taules votacio_estat i participants), no aquí.
+    // Amb false: pàgina fora del menú i cap codi executat.
+    votacioActiva: true,
+    // Connexió a Supabase (Project Settings → API). La clau és la PÚBLICA
+    // («publishable» o «anon»): pot anar al codi perquè les regles de la base de dades
+    // només deixen cridar les funcions de votació. MAI hi poseu la clau «secret»/«service_role».
+    votacio: {
+      supabaseUrl: "https://xhxfibuluwwnahuqfbmn.supabase.co",
+      clauPublica: "sb_publishable_2AN_4_xKgrp15C728fG6xA_SVs9qKKF",
+    },
+    // La web només mostra les cases amb capacitat igual o superior a aquest valor.
+    // Les altres es conserven en aquest fitxer (decisió del 3 de novembre de 2026).
+    capacitatMinimaWeb: 7,
     // "comparant" o "escollida". Si és "escollida", indica l'id a casaEscollida.
     estatDecisio: "comparant",
     casaEscollida: null,
     // Mida del grup per defecte al selector (6 o 7).
     grupPerDefecte: 6,
     grupConfirmat: false,
-    lastUpdated: "2026-11-01",
+    lastUpdated: "2026-11-03",
     // Previsió del temps (Open-Meteo, sense clau). Activar a finals de novembre de 2026.
     meteoActiva: false,
     // URL pública a GitHub Pages: necessària per a la vista prèvia en compartir (Open Graph).
@@ -585,13 +598,13 @@ window.DADES = {
       descripcio: "Recorregut per observar fauna de muntanya.",
       estat: "Cal verificar l'obertura d'hivern i els horaris.", font: "lesangles", coords: [42.5633, 2.0666] },
     { id: "a4", nom: "Cambra d'Ase", cat: "neu", tipus: "Neu / muntanya", zona: "A", cases: [2],
-      descripcio: "Estació d'esquí i entorn de muntanya. La casa 2 indica que és a uns 800 m.",
+      descripcio: "Estació d'esquí i entorn de muntanya, a Eina (Cerdanya).",
       estat: "Consulteu l'obertura de la temporada.", font: "pyrenees2000", coords: [42.452, 2.132] },
     { id: "a5", nom: "Font-Romeu", cat: "neu", tipus: "Poble / muntanya", zona: "A", cases: [3, 8],
       descripcio: "Centre de muntanya amb comerços i accés a activitats d'hivern.",
       estat: "Consulteu les activitats i els horaris.", font: "pyrenees2000", coords: [42.4966, 2.0417] },
     { id: "a6", nom: "Gran Forn Solar d'Odelló", cat: "patrimoni", tipus: "Visita cultural i científica", zona: "A", cases: [3],
-      descripcio: "Instal·lació solar emblemàtica. La casa 3 indica que és a uns 10 minuts a peu.",
+      descripcio: "Instal·lació solar emblemàtica a Odelló (Font-Romeu).",
       estat: "Cal verificar les visites i les reserves.", font: "cerdanya", coords: [42.4950, 2.0289] },
     { id: "a7", nom: "Banys de Llo", cat: "benestar", tipus: "Banys termals", zona: "A", cases: [2],
       descripcio: "Banys termals a l'aire lliure i interiors, segons les instal·lacions.",

@@ -1,8 +1,9 @@
 /*
- * MÒDUL DEL TEMPS — DESACTIVAT FINS A FINALS DE NOVEMBRE
+ * MÒDUL DEL TEMPS (pàgina temps.html) — DESACTIVAT FINS A FINALS DE NOVEMBRE
  * -------------------------------------------------------------
  * Només s'executa si DADES.config.meteoActiva === true (vegeu js/dades.js).
- * Amb false, no es mostra la secció i no es fa cap petició.
+ * Amb false, la pàgina no surt al menú, mostra un avís i no es fa cap petició.
+ * Només es consulten les zones que tenen alguna casa visible a la web.
  *
  * Font: Open-Meteo (https://open-meteo.com), gratuït i sense clau.
  * La previsió arriba a uns 16 dies vista: activeu-la a partir del 20 de novembre de 2026.
@@ -44,11 +45,11 @@ window.Meteo = (function () {
     const seccio = document.getElementById("meteo");
     const cont = document.getElementById("meteo-zones");
     seccio.hidden = false;
-    const enllac = document.getElementById("nav-meteo");
-    if (enllac) enllac.hidden = false;
+    const avis = document.getElementById("meteo-desactivada");
+    if (avis) avis.hidden = true;
     const { arribada, sortida } = dades.viatge;
     try {
-      const resultats = await Promise.all(Object.entries(PUNTS).map(async ([z, p]) => [z, p, await carregarPrevisio(p, arribada, sortida)]));
+      const resultats = await Promise.all(Object.entries(PUNTS).filter(([z]) => dades.zones[z]).map(async ([z, p]) => [z, p, await carregarPrevisio(p, arribada, sortida)]));
       cont.innerHTML = resultats.map(([z, p, d]) => pintarZona(z, dades.zones[z], p, d)).join("");
       const ara = new Date().toLocaleString("ca-ES", { dateStyle: "long", timeStyle: "short" });
       document.getElementById("meteo-font").textContent = `Previsió d'Open-Meteo, actualitzada el ${ara}. Mínima i màxima, pluja i neu prevista.`;
